@@ -2,32 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+button {
+  cursor: pointer;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .triangle {
+    clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+  }
+
+  .arrow {
+    clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+  }
+
+  .perspective {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
   }
 }

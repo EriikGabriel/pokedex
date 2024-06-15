@@ -8,13 +8,13 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        "pokedex-red": "#dc0a2d",
+        "pokedex-red-darken": "#990000",
+        "pokedex-gray": "#232323",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-3d")],
 };
 export default config;
