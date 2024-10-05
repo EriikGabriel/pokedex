@@ -30,8 +30,8 @@ export function Flip({ open = false, className, ...props }: FlipProps) {
         <>
           <div className="absolute bottom-[1vmin] left-[1vmin] h-[36.4vmin] w-[27vmin] rounded-[5px] rounded-tr-none border-[0.2px] border-black">
             <div className="absolute left-[2vmin] top-[2.8vmin] z-[2] h-[8vmin] w-[23vmin] rounded-[3px] border-[0.3px] border-black bg-pokedex-gray p-2">
-              <p className="font-press-start-2p text-[10px]">
-                Loading pokedex...
+              <p className="font-press-start-2p text-[10px]" id="flip-screen">
+                Procurando pokémon com id: <span></span>
               </p>
             </div>
             <div className="absolute left-[2vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />

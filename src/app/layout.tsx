@@ -1,3 +1,4 @@
+import { PokedexProvider } from "@/contexts/PokedexProvider";
 import { cn } from "@utils/cn";
 import type { Metadata } from "next";
 import { Inter, Press_Start_2P } from "next/font/google";
@@ -29,7 +30,7 @@ export default function RootLayout({
           "min-h-dvh text-neutral-100",
         )}
       >
-        {children}
+        <PokedexProvider>{children}</PokedexProvider>
       </body>
     </html>
   );
