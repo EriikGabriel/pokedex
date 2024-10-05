@@ -22,9 +22,12 @@ export function BlueButtons() {
     clearTimeout(timer);
 
     timer = setTimeout(async () => {
-      const pokemon = await api.getPokemonById(Number(temporaryId));
-
-      setPokemon(pokemon);
+      try {
+        const pokemon = await api.getPokemonById(Number(temporaryId));
+        setPokemon(pokemon);
+      } catch (error) {
+        console.error(error);
+      }
 
       temporaryId = "";
       flipScreen.textContent = "";
@@ -45,60 +48,63 @@ export function BlueButtons() {
         <div className="border-t-[0.3px] border-black" />
         <div className="border-t-[0.3px] border-black" />
       </div>
-      <div className="absolute left-[2vmin] top-[12.5vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] font-press-start-2p text-pokedex-gray">
+      <div className="font-vt323 absolute left-[2vmin] top-[12.5vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] text-xl text-pokedex-gray">
         <button
-          className="border-r-[0.3px] border-r-black"
+          className="flex items-center justify-center border-r-[0.3px] border-r-black"
           onClick={getKeyboardInput}
         >
           0
         </button>
         <button
-          className="border-r-[0.3px] border-r-black"
+          className="flex items-center justify-center border-r-[0.3px] border-r-black"
           onClick={getKeyboardInput}
         >
           1
         </button>
         <button
-          className="border-r-[0.3px] border-r-black"
+          className="flex items-center justify-center border-r-[0.3px] border-r-black"
           onClick={getKeyboardInput}
         >
           2
         </button>
         <button
-          className="border-r-[0.3px] border-r-black"
+          className="flex items-center justify-center border-r-[0.3px] border-r-black"
           onClick={getKeyboardInput}
         >
           3
         </button>
-        <button className="border-black" onClick={getKeyboardInput}>
+        <button
+          className="flex items-center justify-center border-black"
+          onClick={getKeyboardInput}
+        >
           4
         </button>
         <button
-          className="border-r-[0.3px] border-t-[0.3px] border-black"
+          className="flex items-center justify-center border-r-[0.3px] border-t-[0.3px] border-black"
           onClick={getKeyboardInput}
         >
           5
         </button>
         <button
-          className="border-r-[0.3px] border-t-[0.3px] border-black"
+          className="flex items-center justify-center border-r-[0.3px] border-t-[0.3px] border-black"
           onClick={getKeyboardInput}
         >
           6
         </button>
         <button
-          className="border-r-[0.3px] border-t-[0.3px] border-black"
+          className="flex items-center justify-center border-r-[0.3px] border-t-[0.3px] border-black"
           onClick={getKeyboardInput}
         >
           7
         </button>
         <button
-          className="border-r-[0.3px] border-t-[0.3px] border-black"
+          className="flex items-center justify-center border-r-[0.3px] border-t-[0.3px] border-black"
           onClick={getKeyboardInput}
         >
           8
         </button>
         <button
-          className="border-t-[0.3px] border-black"
+          className="flex items-center justify-center border-t-[0.3px] border-black"
           onClick={getKeyboardInput}
         >
           9

@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         inter: ["var(--font-inter)", "sans-serif"],
-        "press-start-2p": ["var(--font-press-start-2p)", "monospace"],
+        vt323: ["var(--font-vt323)", "monospace"],
       },
       colors: {
         "pokedex-red": "#dc0a2d",

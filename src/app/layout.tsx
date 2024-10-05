@@ -1,14 +1,14 @@
 import { PokedexProvider } from "@/contexts/PokedexProvider";
 import { cn } from "@utils/cn";
 import type { Metadata } from "next";
-import { Inter, Press_Start_2P } from "next/font/google";
+import { Inter, VT323 } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const pressStart2P = Press_Start_2P({
+const VT323Font = VT323({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-press-start-2p",
+  variable: "--font-vt323",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function RootLayout({
       <body
         className={cn(
           inter.variable,
-          pressStart2P.variable,
+          VT323Font.variable,
           "min-h-dvh text-neutral-100",
         )}
       >
