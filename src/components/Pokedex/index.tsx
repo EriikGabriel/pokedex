@@ -8,8 +8,8 @@ interface PokedexProps {}
 
 export function Pokedex({}: PokedexProps) {
   return (
-    <div className="absolute left-1/2 h-[60vmin] w-[42vmin] -translate-x-[90%]">
-      <div className="h-[60vmin] w-[42vmin] rounded-xl border-[0.3px] border-black bg-pokedex-red">
+    <div className="absolute left-1/2 h-[50vmin] w-[32vmin] -translate-x-[90%]">
+      <div className="h-[50vmin] w-[32vmin] rounded-xl border-[0.3px] border-black bg-pokedex-red">
         <TopDetails />
         <TopLights />
         <Internal />
