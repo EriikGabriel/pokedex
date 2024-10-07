@@ -4,6 +4,7 @@ import { cn } from "@utils/cn";
 import { useState } from "react";
 import { BlueButtons } from "./BlueButtons";
 import { Light } from "./Light";
+import { TextScreen } from "./TextScreen";
 import { WhiteButtons } from "./WhiteButtons";
 
 interface FlipProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,23 +30,20 @@ export function Flip({ open = false, className, ...props }: FlipProps) {
       {flip && (
         <>
           <div className="absolute bottom-[1vmin] left-[1vmin] h-[36.4vmin] w-[27vmin] rounded-[5px] rounded-tr-none border-[0.2px] border-black">
-            <div className="absolute left-[2vmin] top-[2.8vmin] z-[2] h-[8vmin] w-[23vmin] rounded-[3px] border-[0.3px] border-black bg-pokedex-gray p-2">
-              <p className="font-vt323 text-base" id="flip-screen">
-                Procurando por pokémon: <span></span>
-              </p>
-            </div>
-            <div className="absolute left-[2vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />
-            <div className="absolute left-[17vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />
+            <TextScreen />
 
             <BlueButtons />
             <WhiteButtons />
 
-            <div className="relative left-[15vmin] top-[21vmin] flex w-[7vmin] justify-between">
+            <div className="relative left-[18vmin] top-[21vmin] flex w-[7vmin] justify-between">
               <div className="h-[0.6vmin] w-[3.4vmin] rounded-sm border-[0.3px] border-black bg-pokedex-gray" />
               <div className="h-[0.6vmin] w-[3.4vmin] rounded-sm border-[0.3px] border-black bg-pokedex-gray" />
             </div>
 
             <Light className="left-[20vmin] top-[24vmin] h-[3vmin] w-[3vmin] bg-[#fcdf25] after:bg-[#fcdf25]" />
+
+            <div className="absolute left-[2vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />
+            <div className="absolute left-[17vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />
           </div>
 
           <div className="absolute left-[5.9vmin] top-[-2.1vmin] z-[1] h-[8.5vmin] w-[6.4vmin] rounded-tr-[0.3px] border-t-[0.2px] border-t-black bg-pokedex-red rotate-[39.4deg]" />

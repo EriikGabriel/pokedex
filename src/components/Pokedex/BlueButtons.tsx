@@ -36,19 +36,7 @@ export function BlueButtons() {
 
   return (
     <>
-      <div className="absolute left-[2.25vmin] top-[12.9vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff]">
-        <div className="border-r-[0.3px] border-r-black" />
-        <div className="border-r-[0.3px] border-r-black" />
-        <div className="border-r-[0.3px] border-r-black" />
-        <div className="border-r-[0.3px] border-r-black" />
-        <div className="border-t-[0.3px] border-black" />
-        <div className="border-t-[0.3px] border-black" />
-        <div className="border-t-[0.3px] border-black" />
-        <div className="border-t-[0.3px] border-black" />
-        <div className="border-t-[0.3px] border-black" />
-        <div className="border-t-[0.3px] border-black" />
-      </div>
-      <div className="font-vt323 absolute left-[2vmin] top-[12.5vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] text-xl text-pokedex-gray">
+      <div className="absolute left-[2vmin] top-[12.5vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] font-vt323 text-xl text-pokedex-gray">
         <button
           className="flex items-center justify-center border-r-[0.3px] border-r-black"
           onClick={getKeyboardInput}
@@ -109,6 +97,19 @@ export function BlueButtons() {
         >
           9
         </button>
+      </div>
+
+      <div className="absolute left-[2.25vmin] top-[12.9vmin] -z-[1] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] brightness-75">
+        <div className="border-r-[0.3px] border-r-black" />
+        <div className="border-r-[0.3px] border-r-black" />
+        <div className="border-r-[0.3px] border-r-black" />
+        <div className="border-r-[0.3px] border-r-black" />
+        <div className="border-t-[0.3px] border-black" />
+        <div className="border-t-[0.3px] border-black" />
+        <div className="border-t-[0.3px] border-black" />
+        <div className="border-t-[0.3px] border-black" />
+        <div className="border-t-[0.3px] border-black" />
+        <div className="border-t-[0.3px] border-black" />
       </div>
     </>
   );
