@@ -1,4 +1,11 @@
+"use client";
+
+import { usePokedex } from "@contexts/PokedexProvider";
+import Image from "next/image";
+
 export function Screen() {
+  const { pokemon } = usePokedex();
+  console.log(pokemon);
   return (
     <>
       <div className="absolute left-[2.6vmin] top-[3vmin] z-[1] h-[19vmin] w-[22vmin] rounded-[5%_5%_5%_18%_/_5%_5%_5%_18%] border-[0.3px] border-black bg-white">
@@ -7,7 +14,16 @@ export function Screen() {
           <div className="h-[1vmin] w-[1vmin] rounded-full border-[0.3px] border-black bg-pokedex-red-darken" />
         </div>
 
-        <div className="absolute left-[2vmin] top-[2.8vmin] h-[11vmin] w-[17vmin] rounded-[1px] border-[0.3px] border-black bg-pokedex-gray"></div>
+        <div className="absolute left-[2vmin] top-[2.8vmin] h-[11vmin] w-[17vmin] rounded-[1px] border-[0.3px] border-black bg-pokedex-gray">
+          {pokemon && (
+            <Image
+              src={pokemon?.sprites.front_default ?? ""}
+              alt={pokemon?.name ?? ""}
+              layout="fill"
+              objectFit="contain"
+            />
+          )}
+        </div>
 
         <div className="absolute bottom-[1.8vmin] left-[2vmin] h-[2.1vmin] w-[2.1vmin] rounded-full border-[0.3] border-black bg-pokedex-red-darken" />
         <div className="relative left-[15.5vmin] top-[13.8vmin] w-fit">

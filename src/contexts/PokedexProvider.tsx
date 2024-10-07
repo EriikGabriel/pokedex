@@ -1,7 +1,13 @@
 "use client";
 
 import { Pokemon, PokemonClient } from "pokenode-ts";
-import { createContext, Dispatch, SetStateAction, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
 interface PokedexProviderProps {
   children: React.ReactNode;
@@ -13,7 +19,7 @@ type PokedexContextType = {
   pokemon: Pokemon | null;
 };
 
-export const PokedexContext = createContext({} as PokedexContextType);
+const PokedexContext = createContext({} as PokedexContextType);
 
 export function PokedexProvider({ children }: PokedexProviderProps) {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
@@ -33,3 +39,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     </PokedexContext.Provider>
   );
 }
+
+export const usePokedex = (): PokedexContextType => {
+  const pokedexContext = useContext(PokedexContext);
+  return pokedexContext;
+};

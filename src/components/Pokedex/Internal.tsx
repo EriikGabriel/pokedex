@@ -1,28 +1,22 @@
-"use client";
-
-import { PokedexContext } from "@/contexts/PokedexProvider";
-import { useContext } from "react";
+import { GreenDisplay } from "./GreenDisplay";
 import { InternalButton } from "./InternalButton";
 import { Joysticks } from "./Joysticks";
 import { Screen } from "./Screen";
 
 export function Internal() {
-  const { pokemon } = useContext(PokedexContext);
-
   return (
     <>
       <div className="absolute bottom-[1vmin] left-[1vmin] h-[38vmin] w-[27vmin] rounded-[5px] rounded-tr-none border-[0.2px] border-black">
         <Screen />
 
         <InternalButton />
+
         <div className="relative left-[7vmin] top-[24vmin] flex w-[8vmin] justify-between">
           <div className="h-[0.6vmin] w-[3.4vmin] rounded-sm border-[0.3px] border-black bg-pokedex-red-darken" />
           <div className="h-[0.6vmin] w-[3.4vmin] rounded-sm border-[0.3px] border-black bg-[#146889]" />
         </div>
 
-        <div className="absolute bottom-[3.8vmin] left-[7vmin] flex h-[5vmin] w-[8vmin] items-center justify-center rounded-lg border-[0.3px] border-black bg-[#52ae5f] font-vt323 text-xs capitalize tracking-wide text-[#1d5b27]">
-          {pokemon?.name}
-        </div>
+        <GreenDisplay />
 
         <Joysticks />
       </div>

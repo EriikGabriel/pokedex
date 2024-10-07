@@ -1,10 +1,10 @@
 "use client";
 
-import { PokedexContext } from "@/contexts/PokedexProvider";
-import { MouseEvent, useContext } from "react";
+import { usePokedex } from "@contexts/PokedexProvider";
+import { MouseEvent } from "react";
 
 export function BlueButtons() {
-  const { setPokemon, api } = useContext(PokedexContext);
+  const { setPokemon, api } = usePokedex();
 
   let timer: NodeJS.Timeout;
   let temporaryId = "";
