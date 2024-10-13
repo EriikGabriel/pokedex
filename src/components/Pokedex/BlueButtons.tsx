@@ -1,6 +1,8 @@
 "use client";
 
+import { CLICK_AUDIO } from "@constants/audios";
 import { usePokedex } from "@contexts/PokedexProvider";
+
 import { cn } from "@utils/cn";
 import { sleep } from "@utils/sleep";
 
@@ -21,13 +23,17 @@ export function BlueButtons() {
     temporaryId += numberId;
     textScreen.innerHTML = `Search for pokemon: ${temporaryId}`;
 
+    new Audio(CLICK_AUDIO).play();
+
     sleep(1000 * 1.5).then(async () => {
       textScreen.innerHTML = `Searching...`;
 
       try {
+        console.log("Searching for pokemon with id:", temporaryId);
         const pokemon = await api.getPokemonById(Number(temporaryId));
         setPokemon(pokemon);
         updateDescription(pokemon);
+        console.warn("@Playing sound");
       } catch (error) {
         console.error(error);
       }

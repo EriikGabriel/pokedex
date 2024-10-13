@@ -1,5 +1,8 @@
 "use client";
 
+import { SCANNING_POKEMON_AUDIO } from "@constants/audios";
+import { pokedexVoice } from "@utils/pokedex-voice";
+
 import { Pokemon, PokemonClient } from "pokenode-ts";
 import {
   createContext,
@@ -59,6 +62,17 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       .replaceAll("POKéMON", "Pokémon");
 
     screenNumber.innerHTML = flavorTextCleaned;
+
+    const tssAudio = await pokedexVoice(
+      `${pokemon.name}. ${flavorTextCleaned}`,
+    );
+
+    if (tssAudio) {
+      new Audio(SCANNING_POKEMON_AUDIO).play();
+
+      const POKEMON_DESC_AUDIO = new Audio(tssAudio);
+      POKEMON_DESC_AUDIO.play();
+    }
   }
 
   return (

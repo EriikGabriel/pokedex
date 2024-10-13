@@ -1,13 +1,16 @@
 "use client";
 
+import { CLICK_AUDIO } from "@constants/audios";
 import { usePokedex } from "@contexts/PokedexProvider";
 
 export function Joysticks() {
   const { pokemon, setPokemon, api, setSpriteOptions } = usePokedex();
 
   async function changePokemon(dir: "previous" | "next") {
+    new Audio(CLICK_AUDIO).play();
+
     if (dir === "previous") {
-      if (pokemon?.id === 1) return;
+      if (!pokemon || pokemon?.id === 1) return;
 
       const previousPokemon = await api.getPokemonById((pokemon?.id ?? 0) - 1);
       setPokemon(previousPokemon);
@@ -17,14 +20,18 @@ export function Joysticks() {
     }
   }
 
+  function rotatePokemon() {
+    new Audio(CLICK_AUDIO).play();
+
+    setSpriteOptions((prev) => ({ ...prev, rotated: !prev.rotated }));
+  }
+
   return (
     <div className="relative -right-[19.5vmin] top-[29vmin]">
       <button
         className="group absolute left-[-2.6vmin] top-[-0.3vmin] h-[3.4vmin] w-[2.7vmin] rounded-[21%_21%_50%_50%_/_13%_13%_33%_33%] border-l-[0.5px] border-l-black bg-pokedex-gray -rotate-90"
         aria-label="left joystick"
-        onClick={() =>
-          setSpriteOptions((prev) => ({ ...prev, rotated: !prev.rotated }))
-        }
+        onClick={() => rotatePokemon()}
       >
         <div className="triangle absolute left-[0.82vmin] top-[0.8vmin] h-[1vmin] w-[1vmin] bg-slate-200 opacity-50 group-hover:bg-neutral-50 group-hover:opacity-75" />
       </button>
@@ -32,9 +39,7 @@ export function Joysticks() {
       <button
         className="group absolute left-[2.8vmin] top-[-0.3vmin] h-[3.4vmin] w-[2.7vmin] rounded-[21%_21%_50%_50%_/_13%_13%_33%_33%] border-r-[0.5px] border-t-[0.5px] border-solid border-r-black border-t-black bg-pokedex-gray rotate-90"
         aria-label="right joystick"
-        onClick={() =>
-          setSpriteOptions((prev) => ({ ...prev, rotated: !prev.rotated }))
-        }
+        onClick={() => rotatePokemon()}
       >
         <div className="triangle absolute left-[0.82vmin] top-[0.8vmin] h-[1vmin] w-[1vmin] bg-slate-200 opacity-50 group-hover:bg-neutral-50 group-hover:opacity-75" />
       </button>
