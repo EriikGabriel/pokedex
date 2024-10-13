@@ -2,38 +2,36 @@
 
 import { usePokedex } from "@contexts/PokedexProvider";
 import { cn } from "@utils/cn";
+import { sleep } from "@utils/sleep";
+
 import { MouseEvent } from "react";
 
 export function BlueButtons() {
-  const { setPokemon, api } = usePokedex();
+  const { setPokemon, api, updateDescription } = usePokedex();
 
-  let timer: NodeJS.Timeout;
   let temporaryId = "";
 
   function getKeyboardInput(e: MouseEvent) {
-    const screenNumber = document.querySelector(
-      "#screen-number",
-    ) as HTMLSpanElement;
+    const textScreen = document.querySelector(
+      "#text-screen",
+    ) as HTMLParagraphElement;
 
     const numberId = e.currentTarget.textContent ?? "";
 
     temporaryId += numberId;
-    screenNumber.textContent = `${temporaryId}`;
+    textScreen.innerHTML = `Search for pokemon: ${temporaryId}`;
 
-    clearTimeout(timer);
+    sleep(1000 * 1.5).then(async () => {
+      textScreen.innerHTML = `Searching...`;
 
-    timer = setTimeout(async () => {
       try {
         const pokemon = await api.getPokemonById(Number(temporaryId));
-        console.log(pokemon);
         setPokemon(pokemon);
+        updateDescription(pokemon);
       } catch (error) {
         console.error(error);
       }
-
-      temporaryId = "";
-      screenNumber.textContent = "";
-    }, 1000 * 1); // 1 segundos de timeout
+    });
   }
 
   return (

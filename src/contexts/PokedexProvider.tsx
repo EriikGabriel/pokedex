@@ -25,6 +25,7 @@ type PokedexContextType = {
   pokemon: Pokemon | null;
   setSpriteOptions: Dispatch<SetStateAction<SpriteOptionsType>>;
   spriteOptions: SpriteOptionsType;
+  updateDescription: (pokemon: Pokemon) => void;
 };
 
 const PokedexContext = createContext({} as PokedexContextType);
@@ -39,6 +40,27 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
 
   const api = new PokemonClient();
 
+  async function updateDescription(pokemon?: Pokemon) {
+    if (!pokemon) return;
+
+    const screenNumber = document.querySelector(
+      "#text-screen",
+    ) as HTMLParagraphElement;
+
+    const pokemonSpecies = await api.getPokemonSpeciesById(pokemon.id);
+    const flavorText =
+      pokemonSpecies.flavor_text_entries.find(
+        (entry) => entry.language.name === "en",
+      )?.flavor_text ?? "No description found.";
+
+    const flavorTextCleaned = flavorText
+      .replaceAll(/\n/g, " ")
+      .replaceAll(/\f/g, " ")
+      .replaceAll("POKéMON", "Pokémon");
+
+    screenNumber.innerHTML = flavorTextCleaned;
+  }
+
   return (
     <PokedexContext.Provider
       value={{
@@ -47,6 +69,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
         setPokemon,
         spriteOptions,
         setSpriteOptions,
+        updateDescription,
       }}
     >
       {children}
