@@ -32,7 +32,6 @@ export function BlueButtons() {
       textScreen.innerHTML = `Searching...`;
 
       try {
-        console.log("Searching for pokemon with id:", newId);
         const pokemon = await api.getPokemonById(Number(newId));
         updateDescription(pokemon);
         setPokemon(pokemon);

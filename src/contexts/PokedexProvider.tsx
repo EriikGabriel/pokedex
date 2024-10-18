@@ -36,8 +36,8 @@ type PokedexContextType = {
   updateDescription: (pokemon: Pokemon) => void;
   isSearching: boolean;
   setIsSearching: Dispatch<SetStateAction<boolean>>;
-  audioVoiceEnded: boolean;
-  setAudioVoiceEnded: Dispatch<SetStateAction<boolean>>;
+  audioVoice: HTMLAudioElement | null;
+  setAudioVoice: Dispatch<SetStateAction<HTMLAudioElement | null>>;
 };
 
 const PokedexContext = createContext({} as PokedexContextType);
@@ -50,7 +50,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     shiny: false,
   });
   const [isSearching, setIsSearching] = useState(true);
-  const [audioVoiceEnded, setAudioVoiceEnded] = useState(true);
+  const [audioVoice, setAudioVoice] = useState<HTMLAudioElement | null>(null);
 
   const api = new PokemonClient();
 
@@ -88,6 +88,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     let POKEMON_DESC_AUDIO;
 
     if (audioStorage) {
+      audioVoice?.pause();
+
       console.warn("📦 Playing audio from storage...");
       POKEMON_DESC_AUDIO = new Audio(audioStorage.audioURL);
     } else {
@@ -130,8 +132,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       new Audio(SCANNING_POKEMON_AUDIO).play();
 
       POKEMON_DESC_AUDIO.play();
-      POKEMON_DESC_AUDIO.onplay = () => setAudioVoiceEnded(false);
-      POKEMON_DESC_AUDIO.onended = () => setAudioVoiceEnded(true);
+      POKEMON_DESC_AUDIO.onplay = () => setAudioVoice(POKEMON_DESC_AUDIO);
+      POKEMON_DESC_AUDIO.onended = () => setAudioVoice(null);
     }
   }
 
@@ -146,8 +148,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
         updateDescription,
         isSearching,
         setIsSearching,
-        audioVoiceEnded,
-        setAudioVoiceEnded,
+        audioVoice,
+        setAudioVoice,
       }}
     >
       {children}

@@ -5,7 +5,7 @@ import { usePokedex } from "@contexts/PokedexProvider";
 import { Light } from "./Light";
 
 export function TopLights() {
-  const { isSearching, audioVoiceEnded } = usePokedex();
+  const { audioVoice } = usePokedex();
 
   return (
     <>
@@ -13,7 +13,7 @@ export function TopLights() {
         <Light
           className={cn(
             "h-[5.8vmin] w-[5.8vmin] bg-[#2aa9fe] after:bg-[#2aa9fe]",
-            !audioVoiceEnded && "animate-glow repeat-infinite",
+            audioVoice && "animate-glow repeat-infinite",
           )}
         />
       </div>
@@ -22,19 +22,19 @@ export function TopLights() {
         <Light
           className={cn(
             "ml-0 h-[1.6vmin] w-[1.6vmin] bg-[#c20000] after:bg-[#c2001f]",
-            !audioVoiceEnded && "animate-glow repeat-1 delay-100",
+            audioVoice && "animate-glow delay-100 repeat-1",
           )}
         />
         <Light
           className={cn(
             "ml-6 h-[1.6vmin] w-[1.6vmin] bg-[#e9ca40] after:bg-[#e9ca40]",
-            !audioVoiceEnded && "animate-glow repeat-1 delay-75",
+            audioVoice && "animate-glow delay-75 repeat-1",
           )}
         />
         <Light
           className={cn(
             "ml-12 h-[1.6vmin] w-[1.6vmin] bg-[#459c2f] after:bg-[#459c2f]",
-            !audioVoiceEnded && "animate-glow repeat-1 delay-0",
+            audioVoice && "animate-glow delay-0 repeat-1",
           )}
         />
       </div>
