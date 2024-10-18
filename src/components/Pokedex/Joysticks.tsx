@@ -8,14 +8,13 @@ export function Joysticks() {
     usePokedex();
 
   async function changePokemon(dir: "previous" | "next") {
-    if (!pokemon) return;
-
     new Audio(CLICK_AUDIO).play();
 
-    const newId =
-      dir === "previous" ? Math.max(1, pokemon.id - 1) : pokemon.id + 1;
+    const pokeId = pokemon?.id ?? 0;
 
-    if (newId === pokemon.id) return;
+    const newId = dir === "previous" ? Math.max(1, pokeId - 1) : pokeId + 1;
+
+    if (newId === pokemon?.id) return;
 
     try {
       const newPokemon = await api.getPokemonById(newId);
