@@ -22,6 +22,11 @@ type SpriteOptionsType = {
   shiny: boolean;
 };
 
+type AudioStorageType = {
+  pokemon: string;
+  audioURL: string;
+};
+
 type PokedexContextType = {
   api: PokemonClient;
   setPokemon: Dispatch<SetStateAction<Pokemon | null>>;
@@ -69,34 +74,64 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
 
     setIsSearching(true);
 
-    console.warn("🎙️ Transforming text to speech...");
-    screenNumber.innerHTML = "Searching...";
+    const audioList = JSON.parse(
+      localStorage.getItem("@pokedex:audios") ?? "[]",
+    ) as AudioStorageType[];
 
-    try {
-      const audio = await pokedexTTS(`${pokemon.name}. ${flavorTextCleaned}`);
-      const descriptionAudio = JSON.parse(audio as string) as TtsAudioFile;
+    // Empty the audio list if it reaches 250 items
+    if (audioList.length >= 250) audioList.length = 0;
 
-      setIsSearching(false);
+    const audioStorage = audioList.find(
+      (audio) => audio.pokemon === pokemon.name,
+    );
 
-      if (descriptionAudio) {
-        console.log(descriptionAudio);
+    let POKEMON_DESC_AUDIO;
+
+    if (audioStorage) {
+      console.warn("📦 Playing audio from storage...");
+      POKEMON_DESC_AUDIO = new Audio(audioStorage.audioURL);
+    } else {
+      console.warn("🎙️ Transforming text to speech...");
+      screenNumber.innerHTML = "Searching...";
+
+      try {
+        const audio = await pokedexTTS(`${pokemon.name}. ${flavorTextCleaned}`);
+        const descriptionAudio = JSON.parse(audio as string) as TtsAudioFile;
+
+        setIsSearching(false);
+
+        POKEMON_DESC_AUDIO = new Audio(descriptionAudio.resourceUrl);
+
+        if (descriptionAudio) {
+          audioList.push({
+            pokemon: pokemon.name,
+            audioURL: descriptionAudio.resourceUrl,
+          });
+
+          localStorage.setItem("@pokedex:audios", JSON.stringify(audioList));
+          screenNumber.innerHTML = flavorTextCleaned;
+        }
+      } catch (error) {
+        console.error(error);
 
         new Audio(SCANNING_POKEMON_AUDIO).play();
 
-        const POKEMON_DESC_AUDIO = new Audio(descriptionAudio.resourceUrl);
-        POKEMON_DESC_AUDIO.play();
-
-        POKEMON_DESC_AUDIO.onplay = () => setAudioVoiceEnded(false);
-        POKEMON_DESC_AUDIO.onended = () => setAudioVoiceEnded(true);
+        screenNumber.innerHTML = flavorTextCleaned;
+        setIsSearching(false);
       }
+    }
 
-      screenNumber.innerHTML = flavorTextCleaned;
-    } catch (error) {
-      console.error(error);
-      new Audio(SCANNING_POKEMON_AUDIO).play();
+    if (POKEMON_DESC_AUDIO) {
+      console.warn("🔊 Playing audio...");
 
       screenNumber.innerHTML = flavorTextCleaned;
       setIsSearching(false);
+
+      new Audio(SCANNING_POKEMON_AUDIO).play();
+
+      POKEMON_DESC_AUDIO.play();
+      POKEMON_DESC_AUDIO.onplay = () => setAudioVoiceEnded(false);
+      POKEMON_DESC_AUDIO.onended = () => setAudioVoiceEnded(true);
     }
   }
 
