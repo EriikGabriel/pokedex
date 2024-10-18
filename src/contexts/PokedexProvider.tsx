@@ -31,6 +31,8 @@ type PokedexContextType = {
   updateDescription: (pokemon: Pokemon) => void;
   isSearching: boolean;
   setIsSearching: Dispatch<SetStateAction<boolean>>;
+  audioVoiceEnded: boolean;
+  setAudioVoiceEnded: Dispatch<SetStateAction<boolean>>;
 };
 
 const PokedexContext = createContext({} as PokedexContextType);
@@ -43,6 +45,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     shiny: false,
   });
   const [isSearching, setIsSearching] = useState(true);
+  const [audioVoiceEnded, setAudioVoiceEnded] = useState(true);
 
   const api = new PokemonClient();
 
@@ -66,24 +69,35 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
 
     setIsSearching(true);
 
-    console.warn(">> @Playing sound");
+    console.warn("🎙️ Transforming text to speech...");
     screenNumber.innerHTML = "Searching...";
 
-    const audio = await pokedexTTS(`${pokemon.name}. ${flavorTextCleaned}`);
-    const descriptionAudio = JSON.parse(audio as string) as TtsAudioFile;
+    try {
+      const audio = await pokedexTTS(`${pokemon.name}. ${flavorTextCleaned}`);
+      const descriptionAudio = JSON.parse(audio as string) as TtsAudioFile;
 
-    setIsSearching(false);
+      setIsSearching(false);
 
-    if (descriptionAudio) {
-      console.log(descriptionAudio);
+      if (descriptionAudio) {
+        console.log(descriptionAudio);
 
+        new Audio(SCANNING_POKEMON_AUDIO).play();
+
+        const POKEMON_DESC_AUDIO = new Audio(descriptionAudio.resourceUrl);
+        POKEMON_DESC_AUDIO.play();
+
+        POKEMON_DESC_AUDIO.onplay = () => setAudioVoiceEnded(false);
+        POKEMON_DESC_AUDIO.onended = () => setAudioVoiceEnded(true);
+      }
+
+      screenNumber.innerHTML = flavorTextCleaned;
+    } catch (error) {
+      console.error(error);
       new Audio(SCANNING_POKEMON_AUDIO).play();
 
-      const POKEMON_DESC_AUDIO = new Audio(descriptionAudio.resourceUrl);
-      POKEMON_DESC_AUDIO.play();
+      screenNumber.innerHTML = flavorTextCleaned;
+      setIsSearching(false);
     }
-
-    screenNumber.innerHTML = flavorTextCleaned;
   }
 
   return (
@@ -97,6 +111,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
         updateDescription,
         isSearching,
         setIsSearching,
+        audioVoiceEnded,
+        setAudioVoiceEnded,
       }}
     >
       {children}

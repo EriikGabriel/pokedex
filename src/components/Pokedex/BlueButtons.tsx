@@ -48,7 +48,7 @@ export function BlueButtons() {
 
   return (
     <>
-      <div className="absolute left-[2vmin] top-[12.5vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] font-vt323 text-xl text-pokedex-gray">
+      <div className="font-vt323! absolute left-[2vmin] top-[12.5vmin] grid w-[23vmin] grid-cols-[repeat(5,1fr)] grid-rows-[repeat(2,3vmin)] gap-0 rounded border-[0.2px] border-black bg-[#28aaff] text-xl text-pokedex-gray">
         {[...Array(10).keys()].map((num) => (
           <button
             key={num}

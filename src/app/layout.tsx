@@ -1,8 +1,9 @@
-import { PokedexProvider } from "@/contexts/PokedexProvider";
-import { cn } from "@utils/cn";
 import type { Metadata } from "next";
 import { Inter, VT323 } from "next/font/google";
 import "./globals.css";
+
+import { PokedexProvider } from "@contexts/PokedexProvider";
+import { cn } from "@utils/cn";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const VT323Font = VT323({
@@ -27,7 +28,7 @@ export default function RootLayout({
         className={cn(
           inter.variable,
           VT323Font.variable,
-          "min-h-dvh text-neutral-100",
+          "min-h-dvh font-vt323 text-neutral-100",
         )}
       >
         <PokedexProvider>{children}</PokedexProvider>

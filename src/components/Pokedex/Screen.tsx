@@ -62,6 +62,7 @@ export function Screen() {
                   "absolute h-full w-full select-none object-contain",
                   isSearching && "animate-pulse brightness-0",
                 )}
+                id="pokedex-screen"
                 sizes="100%"
                 height={50}
                 width={50}

@@ -18,8 +18,8 @@ export function Joysticks() {
 
     try {
       const newPokemon = await api.getPokemonById(newId);
-      setPokemon(newPokemon);
       updateDescription(newPokemon);
+      setPokemon(newPokemon);
     } catch (error) {
       console.error("Erro ao mudar de Pokémon:", error);
     }
