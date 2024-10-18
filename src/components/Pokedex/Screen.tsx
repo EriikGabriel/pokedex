@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/utils/cn";
 import { usePokedex } from "@contexts/PokedexProvider";
+import { cn } from "@utils/cn";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IoFemale, IoMale, IoSparklesOutline } from "react-icons/io5";
@@ -9,7 +9,8 @@ import { IoFemale, IoMale, IoSparklesOutline } from "react-icons/io5";
 export function Screen() {
   const [pokemonSprite, setPokemonSprite] = useState<string>("");
 
-  const { pokemon, spriteOptions, setSpriteOptions } = usePokedex();
+  const { pokemon, spriteOptions, setSpriteOptions, isSearching } =
+    usePokedex();
 
   function handleGender(gender: "male" | "female") {
     setSpriteOptions({ ...spriteOptions, gender });
@@ -41,7 +42,7 @@ export function Screen() {
           : setPokemonSprite(pokemon?.sprites.front_female!);
       }
     }
-  }, [pokemon, spriteOptions]);
+  }, [pokemon, spriteOptions, isSearching]);
 
   return (
     <>
@@ -57,7 +58,10 @@ export function Screen() {
               <Image
                 src={pokemonSprite ?? pokemon.sprites.front_default}
                 alt={pokemon?.name ?? ""}
-                className="absolute h-full w-full select-none object-contain"
+                className={cn(
+                  "absolute h-full w-full select-none object-contain",
+                  isSearching && "animate-pulse brightness-0",
+                )}
                 sizes="100%"
                 height={50}
                 width={50}

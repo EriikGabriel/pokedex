@@ -4,40 +4,46 @@ import { CLICK_AUDIO } from "@constants/audios";
 import { usePokedex } from "@contexts/PokedexProvider";
 
 import { cn } from "@utils/cn";
-import { sleep } from "@utils/sleep";
 
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 
 export function BlueButtons() {
   const { setPokemon, api, updateDescription } = usePokedex();
-
-  let temporaryId = "";
+  const [temporaryId, setTemporaryId] = useState("");
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
 
   function getKeyboardInput(e: MouseEvent) {
     const textScreen = document.querySelector(
       "#text-screen",
     ) as HTMLParagraphElement;
-
     const numberId = e.currentTarget.textContent ?? "";
 
-    temporaryId += numberId;
-    textScreen.innerHTML = `Search for pokemon: ${temporaryId}`;
+    const newId = temporaryId + numberId;
+    setTemporaryId(newId);
+    textScreen.innerHTML = `Search for pokemon: ${newId}`;
 
     new Audio(CLICK_AUDIO).play();
 
-    sleep(1000 * 1.5).then(async () => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+
+    const timeout = setTimeout(async () => {
       textScreen.innerHTML = `Searching...`;
 
       try {
-        console.log("Searching for pokemon with id:", temporaryId);
-        const pokemon = await api.getPokemonById(Number(temporaryId));
-        setPokemon(pokemon);
+        console.log("Searching for pokemon with id:", newId);
+        const pokemon = await api.getPokemonById(Number(newId));
         updateDescription(pokemon);
-        console.warn("@Playing sound");
+        setPokemon(pokemon);
       } catch (error) {
         console.error(error);
+      } finally {
+        setTemporaryId("");
       }
-    });
+    }, 1000 * 1.5);
+
+    setSearchTimeout(timeout);
   }
 
   return (

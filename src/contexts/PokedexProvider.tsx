@@ -1,8 +1,8 @@
 "use client";
 
 import { SCANNING_POKEMON_AUDIO } from "@constants/audios";
-import { pokedexVoice } from "@utils/pokedex-voice";
-
+import { pokedexTTS } from "@utils/pokedex-tts";
+import { TtsAudioFile } from "fakeyou.ts";
 import { Pokemon, PokemonClient } from "pokenode-ts";
 import {
   createContext,
@@ -29,6 +29,8 @@ type PokedexContextType = {
   setSpriteOptions: Dispatch<SetStateAction<SpriteOptionsType>>;
   spriteOptions: SpriteOptionsType;
   updateDescription: (pokemon: Pokemon) => void;
+  isSearching: boolean;
+  setIsSearching: Dispatch<SetStateAction<boolean>>;
 };
 
 const PokedexContext = createContext({} as PokedexContextType);
@@ -40,6 +42,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     rotated: false,
     shiny: false,
   });
+  const [isSearching, setIsSearching] = useState(true);
 
   const api = new PokemonClient();
 
@@ -61,18 +64,26 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       .replaceAll(/\f/g, " ")
       .replaceAll("POKéMON", "Pokémon");
 
-    screenNumber.innerHTML = flavorTextCleaned;
+    setIsSearching(true);
 
-    const tssAudio = await pokedexVoice(
-      `${pokemon.name}. ${flavorTextCleaned}`,
-    );
+    console.warn(">> @Playing sound");
+    screenNumber.innerHTML = "Searching...";
 
-    if (tssAudio) {
+    const audio = await pokedexTTS(`${pokemon.name}. ${flavorTextCleaned}`);
+    const descriptionAudio = JSON.parse(audio as string) as TtsAudioFile;
+
+    setIsSearching(false);
+
+    if (descriptionAudio) {
+      console.log(descriptionAudio);
+
       new Audio(SCANNING_POKEMON_AUDIO).play();
 
-      const POKEMON_DESC_AUDIO = new Audio(tssAudio);
+      const POKEMON_DESC_AUDIO = new Audio(descriptionAudio.resourceUrl);
       POKEMON_DESC_AUDIO.play();
     }
+
+    screenNumber.innerHTML = flavorTextCleaned;
   }
 
   return (
@@ -84,6 +95,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
         spriteOptions,
         setSpriteOptions,
         updateDescription,
+        isSearching,
+        setIsSearching,
       }}
     >
       {children}

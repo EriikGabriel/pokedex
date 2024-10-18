@@ -2,7 +2,7 @@
 
 import { Client } from "fakeyou.ts";
 
-export async function pokedexVoice(text: string) {
+export async function pokedexTTS(text: string) {
   const client = new Client();
 
   const model = await client.fetchTtsModelByName("Pokedex (Pokemon, 4Kids)");
@@ -13,7 +13,5 @@ export async function pokedexVoice(text: string) {
 
   if (!audio) return;
 
-  console.log(audio);
-
-  return audio.resourceUrl;
+  return JSON.stringify(audio);
 }

@@ -4,19 +4,25 @@ import { CLICK_AUDIO } from "@constants/audios";
 import { usePokedex } from "@contexts/PokedexProvider";
 
 export function Joysticks() {
-  const { pokemon, setPokemon, api, setSpriteOptions } = usePokedex();
+  const { pokemon, setPokemon, api, setSpriteOptions, updateDescription } =
+    usePokedex();
 
   async function changePokemon(dir: "previous" | "next") {
+    if (!pokemon) return;
+
     new Audio(CLICK_AUDIO).play();
 
-    if (dir === "previous") {
-      if (!pokemon || pokemon?.id === 1) return;
+    const newId =
+      dir === "previous" ? Math.max(1, pokemon.id - 1) : pokemon.id + 1;
 
-      const previousPokemon = await api.getPokemonById((pokemon?.id ?? 0) - 1);
-      setPokemon(previousPokemon);
-    } else {
-      const nextPokemon = await api.getPokemonById((pokemon?.id ?? 0) + 1);
-      setPokemon(nextPokemon);
+    if (newId === pokemon.id) return;
+
+    try {
+      const newPokemon = await api.getPokemonById(newId);
+      setPokemon(newPokemon);
+      updateDescription(newPokemon);
+    } catch (error) {
+      console.error("Erro ao mudar de Pokémon:", error);
     }
   }
 
