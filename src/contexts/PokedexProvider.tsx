@@ -90,10 +90,10 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     if (audioStorage) {
       audioVoice?.pause();
 
-      console.warn("📦 Playing audio from storage...");
+      console.log("📦 Playing audio from storage...");
       POKEMON_DESC_AUDIO = new Audio(audioStorage.audioURL);
     } else {
-      console.warn("🎙️ Transforming text to speech...");
+      console.log("🎙️ Transforming text to speech...");
       screenNumber.innerHTML = "Searching...";
 
       try {
@@ -124,7 +124,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     }
 
     if (POKEMON_DESC_AUDIO) {
-      console.warn("🔊 Playing audio...");
+      console.log("🔊 Playing audio...");
 
       screenNumber.innerHTML = flavorTextCleaned;
       setIsSearching(false);

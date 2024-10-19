@@ -6,6 +6,12 @@ button {
   cursor: pointer;
 }
 
+body {
+  background-image: url("/grass_field.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 @layer utilities {
   .triangle {
     clip-path: polygon(50% 100%, 0% 0%, 100% 0%);

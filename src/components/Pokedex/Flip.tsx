@@ -1,11 +1,13 @@
 "use client";
 
-import { cn } from "@utils/cn";
 import { useState } from "react";
 import { BlueButtons } from "./BlueButtons";
 import { Light } from "./Light";
 import { TextScreen } from "./TextScreen";
 import { WhiteButtons } from "./WhiteButtons";
+
+import { usePokedex } from "@contexts/PokedexProvider";
+import { cn } from "@utils/cn";
 
 interface FlipProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -14,6 +16,8 @@ interface FlipProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Flip({ open = false, className, ...props }: FlipProps) {
   const [flip, setFlip] = useState(open);
+
+  const { pokemon } = usePokedex();
 
   return (
     <div
@@ -42,8 +46,16 @@ export function Flip({ open = false, className, ...props }: FlipProps) {
 
             <Light className="left-[20vmin] top-[24vmin] h-[3vmin] w-[3vmin] bg-[#fcdf25] after:bg-[#fcdf25]" />
 
-            <div className="absolute left-[2vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />
-            <div className="absolute left-[17vmin] top-[30vmin] h-[3.5vmin] w-[8vmin] rounded border-[0.3px] border-black bg-pokedex-gray" />
+            <div className="absolute left-[2vmin] top-[30vmin] flex h-[3.5vmin] w-[10vmin] items-center justify-center rounded border-[0.3px] border-black bg-pokedex-gray">
+              {pokemon && (
+                <p className="text-xs">Height: {pokemon.height / 10} m</p>
+              )}
+            </div>
+            <div className="absolute left-[15vmin] top-[30vmin] flex h-[3.5vmin] w-[10vmin] items-center justify-center rounded border-[0.3px] border-black bg-pokedex-gray">
+              {pokemon && (
+                <p className="text-xs">Weight: {pokemon.weight / 10} kg</p>
+              )}
+            </div>
           </div>
 
           <div className="absolute left-[5.9vmin] top-[-2.1vmin] z-[1] h-[8.5vmin] w-[6.4vmin] rounded-tr-[0.3px] border-t-[0.2px] border-t-black bg-pokedex-red rotate-[39.4deg]" />

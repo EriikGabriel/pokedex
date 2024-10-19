@@ -44,6 +44,8 @@ export function Screen() {
     }
   }, [pokemon, spriteOptions, isSearching]);
 
+  console.log(pokemon);
+
   return (
     <>
       <div className="absolute left-[2.6vmin] top-[3vmin] z-[1] h-[19vmin] w-[22vmin] rounded-[5%_5%_5%_18%_/_5%_5%_5%_18%] border-[0.3px] border-black bg-white">
@@ -62,12 +64,24 @@ export function Screen() {
                   "absolute h-full w-full select-none object-contain",
                   isSearching && "animate-pulse brightness-0",
                 )}
+                style={{ imageRendering: "pixelated" }}
                 id="pokedex-screen"
                 sizes="100%"
                 height={50}
                 width={50}
               />
-              <div className="z-1 relative flex h-full items-end justify-between px-1 font-vt323 text-xs">
+              <div className="z-1 absolute top-0 flex h-fit w-full gap-1 p-1 text-xs">
+                {pokemon.types.map(({ type }, i) => (
+                  <Image
+                    key={i}
+                    src={`/types/${type.name}.svg`}
+                    alt={type.name}
+                    height={8}
+                    width={8}
+                  />
+                ))}
+              </div>
+              <div className="z-1 absolute bottom-0 flex h-fit w-full justify-between px-1 text-xs">
                 <div className="flex w-full justify-between">
                   <p className="text-white">{("000" + pokemon.id).slice(-3)}</p>
                   <div className="flex items-center justify-center">
