@@ -9,8 +9,14 @@ import { IoFemale, IoMale, IoSparklesOutline } from "react-icons/io5";
 export function Screen() {
   const [pokemonSprite, setPokemonSprite] = useState<string>("");
 
-  const { pokemon, spriteOptions, setSpriteOptions, isSearching } =
-    usePokedex();
+  const {
+    api,
+    pokemon,
+    isSearching,
+    spriteOptions,
+    setPokemon,
+    setSpriteOptions,
+  } = usePokedex();
 
   function handleGender(gender: "male" | "female") {
     setSpriteOptions({ ...spriteOptions, gender });
@@ -44,7 +50,26 @@ export function Screen() {
     }
   }, [pokemon, spriteOptions, isSearching]);
 
-  console.log(pokemon);
+  async function handleSpecies() {
+    if (!pokemon) return;
+
+    const species = await api.getPokemonSpeciesById(pokemon.id);
+
+    const currentVarietyName = spriteOptions.variety ?? pokemon.name;
+    const currentVarietyId = species.varieties.findIndex(
+      (variety) => variety.pokemon.name === currentVarietyName,
+    );
+
+    const nextVariety =
+      species.varieties[(currentVarietyId + 1) % species.varieties.length];
+
+    if (nextVariety) {
+      const nextPokemon = await api.getPokemonByName(nextVariety.pokemon.name);
+
+      setSpriteOptions({ ...spriteOptions, variety: nextVariety.pokemon.name });
+      setPokemon({ ...nextPokemon, id: pokemon.id });
+    }
+  }
 
   return (
     <>
@@ -58,7 +83,11 @@ export function Screen() {
           {pokemon && (
             <>
               <Image
-                src={pokemonSprite ?? pokemon.sprites.front_default}
+                src={
+                  pokemonSprite ??
+                  pokemon.sprites.front_default ??
+                  pokemon.sprites.other?.["official-artwork"].front_default
+                }
                 alt={pokemon?.name ?? ""}
                 className={cn(
                   "absolute h-full w-full select-none object-contain",
@@ -116,7 +145,11 @@ export function Screen() {
           )}
         </div>
 
-        <div className="absolute bottom-[1.8vmin] left-[2vmin] h-[2.1vmin] w-[2.1vmin] rounded-full border-[0.3] border-black bg-pokedex-red-darken" />
+        <button
+          className="absolute bottom-[1.8vmin] left-[2vmin] h-[2.1vmin] w-[2.1vmin] rounded-full border-[0.3] border-black bg-pokedex-red-darken"
+          onClick={handleSpecies}
+        />
+
         <div className="relative left-[15.5vmin] top-[13.8vmin] w-fit">
           <div className="mb-[1px] h-1 w-[3.5vmin] rounded-[0.2px] border-b-[2.38px] border-b-black" />
           <div className="mb-[1px] h-1 w-[3.5vmin] rounded-[0.2px] border-b-[2.38px] border-b-black" />

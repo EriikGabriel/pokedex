@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@/utils/cn";
 import { usePokedex } from "@contexts/PokedexProvider";
-import { cn } from "@utils/cn";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -39,19 +39,24 @@ export function Pokemon() {
   }, [pokemon, spriteOptions]);
 
   return (
-    <div className="flex w-1/2 items-center">
+    <div className="relative flex w-1/2 items-center">
       {pokemon && (
-        <>
-          <Image
-            src={pokemonSprite || ""}
-            alt="Pokemon"
-            width={pokemonHeight * 200}
-            height={pokemonHeight * 200}
-            style={{ imageRendering: "pixelated" }}
-            className={cn("mx-auto")}
-            priority
-          />
-        </>
+        <Image
+          src={
+            pokemonSprite ??
+            pokemon.sprites.versions["generation-v"]["black-white"].animated
+              .front_default ??
+            pokemon.sprites.front_default
+          }
+          alt={`${pokemon.name} sprite`}
+          width={pokemonHeight * 200}
+          height={pokemonHeight * 200}
+          style={{ imageRendering: "pixelated" }}
+          className={cn(
+            "max-w-auto mx-auto max-h-fit",
+            pokemon.name.includes("gmax") && "max-w-auto absolute bottom-0",
+          )}
+        />
       )}
     </div>
   );

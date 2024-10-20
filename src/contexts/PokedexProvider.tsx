@@ -20,6 +20,7 @@ type SpriteOptionsType = {
   gender: "male" | "female";
   rotated: boolean;
   shiny: boolean;
+  variety?: string;
 };
 
 type AudioStorageType = {

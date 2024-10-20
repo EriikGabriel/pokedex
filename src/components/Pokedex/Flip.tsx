@@ -48,12 +48,12 @@ export function Flip({ open = false, className, ...props }: FlipProps) {
 
             <div className="absolute left-[2vmin] top-[30vmin] flex h-[3.5vmin] w-[10vmin] items-center justify-center rounded border-[0.3px] border-black bg-pokedex-gray">
               {pokemon && (
-                <p className="text-xs">Height: {pokemon.height / 10} m</p>
+                <p className="text-[10px]">Height: {pokemon.height / 10} m</p>
               )}
             </div>
             <div className="absolute left-[15vmin] top-[30vmin] flex h-[3.5vmin] w-[10vmin] items-center justify-center rounded border-[0.3px] border-black bg-pokedex-gray">
               {pokemon && (
-                <p className="text-xs">Weight: {pokemon.weight / 10} kg</p>
+                <p className="text-[10px]">Weight: {pokemon.weight / 10} kg</p>
               )}
             </div>
           </div>
