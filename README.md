@@ -73,7 +73,7 @@ This project was developed using the following technologies:
 
 ## 🚀 Project Deploy
 
-This project was deployed on the [Vercel](https://vercel.com/) platform and can be accessed [here]().
+This project was deployed on the [Vercel](https://vercel.com/) platform and can be accessed [here](pokedex-eriikgabriel.vercel.app).
 
 ## 📝 License
 
