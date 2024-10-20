@@ -1,6 +1,5 @@
 "use client";
 
-import { PokemonListItemType } from "@/components/Pokedex/Screen";
 import { SCANNING_POKEMON_AUDIO } from "@constants/audios";
 import { getTextScreen, getValueInput } from "@utils/pokedex-elements";
 import { pokedexTTS } from "@utils/pokedex-tts";
@@ -43,7 +42,6 @@ type PokedexContextType = {
   setAudioVoice: Dispatch<SetStateAction<HTMLAudioElement | null>>;
   updateDescription: (pokemon: Pokemon) => void;
   getPokemonDescription: (pokemon: Pokemon) => Promise<string>;
-  listPokemons: (offset?: number) => void;
 };
 
 const PokedexContext = createContext({} as PokedexContextType);
@@ -57,7 +55,6 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
   });
   const [isSearching, setIsSearching] = useState(true);
   const [audioVoice, setAudioVoice] = useState<HTMLAudioElement | null>(null);
-  const [pokemonList, setPokemonList] = useState<PokemonListItemType[]>([]);
 
   const api = new PokemonClient();
 
@@ -152,41 +149,6 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     }
   }
 
-  async function listPokemons(offset = 0) {
-    try {
-      const newListPokemons = await api.listPokemons(offset);
-      const pokemonListRequests = newListPokemons.results.map((res) =>
-        api.getPokemonByName(res.name),
-      );
-
-      const newPokemonsResolves = await Promise.all(pokemonListRequests);
-
-      const newPokemons = newPokemonsResolves.map((pokemon) => {
-        const audioList = JSON.parse(
-          localStorage.getItem("@pokedex:audios") ?? "[]",
-        ) as AudioStorageType[];
-
-        const audioStorage = audioList.find(
-          (audio) => audio.pokemon === pokemon.name,
-        );
-
-        return {
-          id: pokemon.id,
-          icon: pokemon.sprites.front_default ?? "",
-          hasDiscovered: !!audioStorage,
-        };
-      });
-
-      setPokemonList((prevPokemons: PokemonListItemType[]) => [
-        ...prevPokemons,
-        ...newPokemons,
-      ]);
-    } catch (error) {
-      console.log("erro de requisição", error);
-      return;
-    }
-  }
-
   return (
     <PokedexContext.Provider
       value={{
@@ -201,7 +163,6 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
         setAudioVoice,
         updateDescription,
         getPokemonDescription,
-        listPokemons,
       }}
     >
       {children}
