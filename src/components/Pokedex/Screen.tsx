@@ -1,5 +1,6 @@
 "use client";
 
+import { listPokemon } from "@/utils/list-pokemon";
 import { AudioStorageType, usePokedex } from "@contexts/PokedexProvider";
 import { cn } from "@utils/cn";
 import { AudioLines } from "lucide-react";
@@ -70,42 +71,20 @@ export function Screen() {
   }
 
   async function handlePokemonList() {
+    setShowPokemonList(!showPokemonList);
+
+    if (showPokemonList) return;
+
     try {
-      const pokemonListResult = await api.listPokemons();
+      const audioList = JSON.parse(
+        localStorage.getItem("@pokedex:audios") ?? "[]",
+      ) as AudioStorageType[];
 
-      if (showPokemonList) {
-        setShowPokemonList(false);
-        return;
-      }
-
-      setShowPokemonList(true);
-
-      const pokemonListRequests = pokemonListResult.results.map((res) =>
-        api.getPokemonByName(res.name),
-      );
-
-      const pokemonListResolves = await Promise.all(pokemonListRequests);
-
-      const newPokemons = pokemonListResolves.map((pokemon) => {
-        const audioList = JSON.parse(
-          localStorage.getItem("@pokedex:audios") ?? "[]",
-        ) as AudioStorageType[];
-
-        const audioStorage = audioList.find(
-          (audio) => audio.pokemon === pokemon.name,
-        );
-
-        return {
-          id: pokemon.id,
-          icon: pokemon.sprites.front_default ?? "",
-          hasDiscovered: !!audioStorage,
-        };
-      });
+      const newPokemons = await listPokemon(0, audioList);
 
       setPokemonList((prevPokemons) => [...prevPokemons, ...newPokemons]);
     } catch (error) {
-      console.log("erro de requisição", error);
-      return;
+      console.error("erro de requisição:", error);
     }
   }
 
