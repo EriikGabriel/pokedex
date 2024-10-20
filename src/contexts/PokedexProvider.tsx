@@ -61,6 +61,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     const screenNumber = document.querySelector(
       "#text-screen",
     ) as HTMLParagraphElement;
+    const valInput = document.querySelector("#val-screen") as HTMLInputElement;
 
     const pokemonSpecies = await api.getPokemonSpeciesById(pokemon.id);
     const flavorText =
@@ -95,6 +96,8 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       POKEMON_DESC_AUDIO = new Audio(audioStorage.audioURL);
     } else {
       console.log("🎙️ Transforming text to speech...");
+      valInput.value = "";
+      valInput.disabled = true;
       screenNumber.innerHTML = "Searching...";
 
       try {

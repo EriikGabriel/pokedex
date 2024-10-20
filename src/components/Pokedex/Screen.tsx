@@ -20,8 +20,6 @@ export function Screen() {
     setAudioVoice,
   } = usePokedex();
 
-  console.log(pokemon);
-
   function handleGender(gender: "male" | "female") {
     setSpriteOptions({ ...spriteOptions, gender });
   }

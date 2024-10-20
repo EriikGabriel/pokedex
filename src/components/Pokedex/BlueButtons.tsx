@@ -18,17 +18,23 @@ export function BlueButtons() {
     const textScreen = document.querySelector(
       "#text-screen",
     ) as HTMLParagraphElement;
+    const valInput = document.querySelector("#val-screen") as HTMLInputElement;
+
     const numberId = e.currentTarget.textContent ?? "";
 
     const newId = temporaryId + numberId;
     setTemporaryId(newId);
-    textScreen.innerHTML = `Search for pokemon: ${newId}`;
+    textScreen.innerHTML = `Search for pokemon: `;
+    valInput.value = newId;
+    valInput.disabled = false;
 
     new Audio(CLICK_AUDIO).play();
 
     if (searchTimeout) clearTimeout(searchTimeout);
 
     const timeout = setTimeout(async () => {
+      valInput.value = "";
+      valInput.disabled = true;
       textScreen.innerHTML = `Searching...`;
 
       try {
