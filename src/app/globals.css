@@ -12,6 +12,24 @@ body {
   background-repeat: no-repeat;
 }
 
+@layer base {
+  ::-webkit-scrollbar {
+    @apply w-1;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral-500;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral-600;
+  }
+}
+
 @layer utilities {
   .triangle {
     clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
