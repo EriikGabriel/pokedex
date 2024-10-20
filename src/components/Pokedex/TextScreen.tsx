@@ -33,7 +33,7 @@ export function TextScreen() {
       <input
         onKeyDown={handleSearchPokemon}
         id="val-screen"
-        className="h-fit w-full flex-1 truncate p-0 px-1 leading-3 tracking-tight outline-none disabled:hidden"
+        className="h-fit w-full flex-1 truncate bg-inherit p-0 px-1 leading-3 tracking-tight outline-none disabled:hidden"
         autoComplete="off"
         spellCheck="false"
         disabled
