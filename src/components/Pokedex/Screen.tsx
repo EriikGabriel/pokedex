@@ -1,14 +1,24 @@
 "use client";
 
-import { usePokedex } from "@contexts/PokedexProvider";
+import { AudioStorageType, usePokedex } from "@contexts/PokedexProvider";
 import { cn } from "@utils/cn";
 import { AudioLines } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IoFemale, IoMale, IoSparklesOutline } from "react-icons/io5";
+import { PokemonListMore } from "./PokemonListMore";
+import { PokemonListNav } from "./PokemonListNav";
+
+export type PokemonListItemType = {
+  id: number;
+  icon: string;
+  hasDiscovered?: boolean;
+};
 
 export function Screen() {
   const [pokemonSprite, setPokemonSprite] = useState<string>("");
+  const [pokemonList, setPokemonList] = useState<PokemonListItemType[]>([]);
+  const [showPokemonList, setShowPokemonList] = useState(false);
 
   const {
     api,
@@ -59,6 +69,46 @@ export function Screen() {
     }
   }
 
+  async function handlePokemonList() {
+    try {
+      const pokemonListResult = await api.listPokemons();
+
+      if (showPokemonList) {
+        setShowPokemonList(false);
+        return;
+      }
+
+      setShowPokemonList(true);
+
+      const pokemonListRequests = pokemonListResult.results.map((res) =>
+        api.getPokemonByName(res.name),
+      );
+
+      const pokemonListResolves = await Promise.all(pokemonListRequests);
+
+      const newPokemons = pokemonListResolves.map((pokemon) => {
+        const audioList = JSON.parse(
+          localStorage.getItem("@pokedex:audios") ?? "[]",
+        ) as AudioStorageType[];
+
+        const audioStorage = audioList.find(
+          (audio) => audio.pokemon === pokemon.name,
+        );
+
+        return {
+          id: pokemon.id,
+          icon: pokemon.sprites.front_default ?? "",
+          hasDiscovered: !!audioStorage,
+        };
+      });
+
+      setPokemonList((prevPokemons) => [...prevPokemons, ...newPokemons]);
+    } catch (error) {
+      console.log("erro de requisição", error);
+      return;
+    }
+  }
+
   useEffect(() => {
     if (spriteOptions.gender === "male" || !pokemon?.sprites.front_female) {
       if (spriteOptions.rotated) {
@@ -92,7 +142,7 @@ export function Screen() {
         </div>
 
         <div className="absolute left-[2vmin] top-[2.8vmin] h-[11vmin] w-[17vmin] rounded-[1px] border-[0.3px] border-black bg-pokedex-gray">
-          {pokemon && (
+          {pokemon && !showPokemonList && (
             <>
               <Image
                 src={
@@ -160,6 +210,12 @@ export function Screen() {
               </div>
             </>
           )}
+          {showPokemonList && (
+            <div className="grid h-full grid-flow-row-dense grid-cols-3 gap-[3px] overflow-auto p-[3px]">
+              <PokemonListNav pokemonList={pokemonList} />
+              <PokemonListMore showMore={showPokemonList} />
+            </div>
+          )}
         </div>
 
         <button
@@ -167,12 +223,15 @@ export function Screen() {
           onClick={handleSpecies}
         />
 
-        <div className="relative left-[15.5vmin] top-[13.8vmin] w-fit">
+        <button
+          onClick={handlePokemonList}
+          className="relative left-[15.5vmin] top-[13.8vmin] w-fit"
+        >
           <div className="mb-[1px] h-1 w-[3.5vmin] rounded-[0.2px] border-b-[2.38px] border-b-black" />
           <div className="mb-[1px] h-1 w-[3.5vmin] rounded-[0.2px] border-b-[2.38px] border-b-black" />
           <div className="mb-[1px] h-1 w-[3.5vmin] rounded-[0.2px] border-b-[2.38px] border-b-black" />
           <div className="mb-[1px] h-1 w-[3.5vmin] rounded-[0.2px] border-b-[2.38px] border-b-black" />
-        </div>
+        </button>
       </div>
 
       <div className="absolute left-[3vmin] top-[3.4vmin] h-[19vmin] w-[22vmin] rounded-[5%_5%_5%_18%_/_5%_5%_5%_18%] border-[0.3px] border-black bg-white brightness-75" />
