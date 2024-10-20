@@ -2,6 +2,7 @@
 
 import { usePokedex } from "@contexts/PokedexProvider";
 import { cn } from "@utils/cn";
+import { AudioLines } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { IoFemale, IoMale, IoSparklesOutline } from "react-icons/io5";
@@ -16,7 +17,10 @@ export function Screen() {
     spriteOptions,
     setPokemon,
     setSpriteOptions,
+    setAudioVoice,
   } = usePokedex();
+
+  console.log(pokemon);
 
   function handleGender(gender: "male" | "female") {
     setSpriteOptions({ ...spriteOptions, gender });
@@ -24,6 +28,37 @@ export function Screen() {
 
   function handleShiny() {
     setSpriteOptions({ ...spriteOptions, shiny: !spriteOptions.shiny });
+  }
+
+  function handleCries() {
+    if (!pokemon) return;
+
+    const cry = new Audio(pokemon.cries.latest ?? pokemon.cries.legacy ?? "");
+    cry.play();
+
+    cry.onplay = () => setAudioVoice(cry);
+    cry.onended = () => setAudioVoice(null);
+  }
+
+  async function handleSpecies() {
+    if (!pokemon) return;
+
+    const species = await api.getPokemonSpeciesById(pokemon.id);
+
+    const currentVarietyName = spriteOptions.variety ?? pokemon.name;
+    const currentVarietyId = species.varieties.findIndex(
+      (variety) => variety.pokemon.name === currentVarietyName,
+    );
+
+    const nextVariety =
+      species.varieties[(currentVarietyId + 1) % species.varieties.length];
+
+    if (nextVariety) {
+      const nextPokemon = await api.getPokemonByName(nextVariety.pokemon.name);
+
+      setSpriteOptions({ ...spriteOptions, variety: nextVariety.pokemon.name });
+      setPokemon({ ...nextPokemon, id: pokemon.id });
+    }
   }
 
   useEffect(() => {
@@ -49,27 +84,6 @@ export function Screen() {
       }
     }
   }, [pokemon, spriteOptions, isSearching]);
-
-  async function handleSpecies() {
-    if (!pokemon) return;
-
-    const species = await api.getPokemonSpeciesById(pokemon.id);
-
-    const currentVarietyName = spriteOptions.variety ?? pokemon.name;
-    const currentVarietyId = species.varieties.findIndex(
-      (variety) => variety.pokemon.name === currentVarietyName,
-    );
-
-    const nextVariety =
-      species.varieties[(currentVarietyId + 1) % species.varieties.length];
-
-    if (nextVariety) {
-      const nextPokemon = await api.getPokemonByName(nextVariety.pokemon.name);
-
-      setSpriteOptions({ ...spriteOptions, variety: nextVariety.pokemon.name });
-      setPokemon({ ...nextPokemon, id: pokemon.id });
-    }
-  }
 
   return (
     <>
@@ -99,16 +113,21 @@ export function Screen() {
                 height={50}
                 width={50}
               />
-              <div className="z-1 absolute top-0 flex h-fit w-full gap-1 p-1 text-xs">
-                {pokemon.types.map(({ type }, i) => (
-                  <Image
-                    key={i}
-                    src={`/types/${type.name}.svg`}
-                    alt={type.name}
-                    height={8}
-                    width={8}
-                  />
-                ))}
+              <div className="z-1 absolute top-0 flex h-fit w-full justify-between p-1 text-xs">
+                <div className="flex gap-1">
+                  {pokemon.types.map(({ type }, i) => (
+                    <Image
+                      key={i}
+                      src={`/types/${type.name}.svg`}
+                      alt={type.name}
+                      height={8}
+                      width={8}
+                    />
+                  ))}
+                </div>
+                <button onClick={handleCries}>
+                  <AudioLines className="size-2 text-neutral-500 hover:text-white" />
+                </button>
               </div>
               <div className="z-1 absolute bottom-0 flex h-fit w-full justify-between px-1 text-xs">
                 <div className="flex w-full justify-between">
