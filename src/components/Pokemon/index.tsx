@@ -56,6 +56,7 @@ export function Pokemon() {
             "max-w-auto mx-auto max-h-fit",
             pokemon.name.includes("gmax") && "max-w-auto absolute bottom-0",
           )}
+          unoptimized
         />
       )}
     </div>

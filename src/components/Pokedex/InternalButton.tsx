@@ -1,20 +1,29 @@
 "use client";
 
+import { usePokedex } from "@contexts/PokedexProvider";
+import { getTextScreen, getValueInput } from "@utils/pokedex-elements";
+
 export function InternalButton() {
-  function handleClearTextScreen() {
-    const textScreen = document.querySelector(
-      "#text-screen",
-    ) as HTMLParagraphElement;
+  const { pokemon, getPokemonDescription } = usePokedex();
+
+  async function handleClearTextScreen() {
+    const textScreen = getTextScreen();
+    const valueInput = getValueInput();
 
     if (textScreen.textContent === "Searching...") return;
 
-    const valInput = document.querySelector("#val-screen") as HTMLInputElement;
+    if (pokemon && !valueInput.disabled) {
+      const description = await getPokemonDescription(pokemon);
+      textScreen.innerHTML = description;
+      valueInput.disabled = true;
+      return;
+    }
 
     textScreen.innerHTML = "Search for pokemon:";
 
-    valInput.value = "";
-    valInput.disabled = false;
-    valInput.focus();
+    valueInput.value = "";
+    valueInput.disabled = false;
+    valueInput.focus();
   }
 
   return (

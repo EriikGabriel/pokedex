@@ -4,7 +4,7 @@ import { CLICK_AUDIO } from "@constants/audios";
 import { usePokedex } from "@contexts/PokedexProvider";
 
 export function Joysticks() {
-  const { pokemon, setPokemon, api, setSpriteOptions, updateDescription } =
+  const { api, pokemon, setPokemon, setSpriteOptions, updateDescription } =
     usePokedex();
 
   async function changePokemon(dir: "previous" | "next") {

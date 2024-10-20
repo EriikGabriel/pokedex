@@ -1,9 +1,11 @@
 "use client";
 
 import { SCANNING_POKEMON_AUDIO } from "@constants/audios";
+import { getTextScreen, getValueInput } from "@utils/pokedex-elements";
 import { pokedexTTS } from "@utils/pokedex-tts";
 import { TtsAudioFile } from "fakeyou.ts";
 import { Pokemon, PokemonClient } from "pokenode-ts";
+
 import {
   createContext,
   Dispatch,
@@ -30,15 +32,16 @@ type AudioStorageType = {
 
 type PokedexContextType = {
   api: PokemonClient;
-  setPokemon: Dispatch<SetStateAction<Pokemon | null>>;
   pokemon: Pokemon | null;
-  setSpriteOptions: Dispatch<SetStateAction<SpriteOptionsType>>;
   spriteOptions: SpriteOptionsType;
-  updateDescription: (pokemon: Pokemon) => void;
   isSearching: boolean;
-  setIsSearching: Dispatch<SetStateAction<boolean>>;
   audioVoice: HTMLAudioElement | null;
+  setPokemon: Dispatch<SetStateAction<Pokemon | null>>;
+  setSpriteOptions: Dispatch<SetStateAction<SpriteOptionsType>>;
+  setIsSearching: Dispatch<SetStateAction<boolean>>;
   setAudioVoice: Dispatch<SetStateAction<HTMLAudioElement | null>>;
+  updateDescription: (pokemon: Pokemon) => void;
+  getPokemonDescription: (pokemon: Pokemon) => Promise<string>;
 };
 
 const PokedexContext = createContext({} as PokedexContextType);
@@ -55,14 +58,12 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
 
   const api = new PokemonClient();
 
-  async function updateDescription(pokemon?: Pokemon) {
-    if (!pokemon) return;
+  async function updateDescription(pokemon: Pokemon) {
+    const description = await getPokemonDescription(pokemon);
+    await playPokemonDescription(pokemon, description);
+  }
 
-    const screenNumber = document.querySelector(
-      "#text-screen",
-    ) as HTMLParagraphElement;
-    const valInput = document.querySelector("#val-screen") as HTMLInputElement;
-
+  async function getPokemonDescription(pokemon: Pokemon) {
     const pokemonSpecies = await api.getPokemonSpeciesById(pokemon.id);
     const flavorText =
       pokemonSpecies.flavor_text_entries.find(
@@ -73,6 +74,13 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       .replaceAll(/\n/g, " ")
       .replaceAll(/\f/g, " ")
       .replaceAll("POKéMON", "Pokémon");
+
+    return flavorTextCleaned;
+  }
+
+  async function playPokemonDescription(pokemon: Pokemon, description: string) {
+    const textScreen = getTextScreen();
+    const valueInput = getValueInput();
 
     setIsSearching(true);
 
@@ -96,12 +104,12 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       POKEMON_DESC_AUDIO = new Audio(audioStorage.audioURL);
     } else {
       console.log("🎙️ Transforming text to speech...");
-      valInput.value = "";
-      valInput.disabled = true;
-      screenNumber.innerHTML = "Searching...";
+      valueInput.value = "";
+      valueInput.disabled = true;
+      textScreen.innerHTML = "Searching...";
 
       try {
-        const audio = await pokedexTTS(`${pokemon.name}. ${flavorTextCleaned}`);
+        const audio = await pokedexTTS(`${pokemon.name}. ${description}`);
         const descriptionAudio = JSON.parse(audio as string) as TtsAudioFile;
 
         setIsSearching(false);
@@ -115,14 +123,14 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
           });
 
           localStorage.setItem("@pokedex:audios", JSON.stringify(audioList));
-          screenNumber.innerHTML = flavorTextCleaned;
+          textScreen.innerHTML = description;
         }
       } catch (error) {
         console.error(error);
 
         new Audio(SCANNING_POKEMON_AUDIO).play();
 
-        screenNumber.innerHTML = flavorTextCleaned;
+        textScreen.innerHTML = description;
         setIsSearching(false);
       }
     }
@@ -130,7 +138,7 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
     if (POKEMON_DESC_AUDIO) {
       console.log("🔊 Playing audio...");
 
-      screenNumber.innerHTML = flavorTextCleaned;
+      textScreen.innerHTML = description;
       setIsSearching(false);
 
       new Audio(SCANNING_POKEMON_AUDIO).play();
@@ -146,14 +154,15 @@ export function PokedexProvider({ children }: PokedexProviderProps) {
       value={{
         api,
         pokemon,
-        setPokemon,
         spriteOptions,
-        setSpriteOptions,
-        updateDescription,
         isSearching,
-        setIsSearching,
         audioVoice,
+        setPokemon,
+        setSpriteOptions,
+        setIsSearching,
         setAudioVoice,
+        updateDescription,
+        getPokemonDescription,
       }}
     >
       {children}

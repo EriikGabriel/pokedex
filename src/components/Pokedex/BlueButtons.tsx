@@ -4,37 +4,37 @@ import { CLICK_AUDIO } from "@constants/audios";
 import { usePokedex } from "@contexts/PokedexProvider";
 
 import { cn } from "@utils/cn";
+import { getTextScreen, getValueInput } from "@utils/pokedex-elements";
 
 import { MouseEvent, useState } from "react";
 
 export function BlueButtons() {
-  const { setPokemon, api, updateDescription } = usePokedex();
+  const { api, setPokemon, updateDescription } = usePokedex();
+
   const [temporaryId, setTemporaryId] = useState("");
   const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
     null,
   );
 
   function getKeyboardInput(e: MouseEvent) {
-    const textScreen = document.querySelector(
-      "#text-screen",
-    ) as HTMLParagraphElement;
-    const valInput = document.querySelector("#val-screen") as HTMLInputElement;
+    const textScreen = getTextScreen();
+    const valueInput = getValueInput();
 
     const numberId = e.currentTarget.textContent ?? "";
 
     const newId = temporaryId + numberId;
     setTemporaryId(newId);
     textScreen.innerHTML = `Search for pokemon: `;
-    valInput.value = newId;
-    valInput.disabled = false;
+    valueInput.value = newId;
+    valueInput.disabled = false;
 
     new Audio(CLICK_AUDIO).play();
 
     if (searchTimeout) clearTimeout(searchTimeout);
 
     const timeout = setTimeout(async () => {
-      valInput.value = "";
-      valInput.disabled = true;
+      valueInput.value = "";
+      valueInput.disabled = true;
       textScreen.innerHTML = `Searching...`;
 
       try {
