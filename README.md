@@ -71,10 +71,6 @@ This project was developed using the following technologies:
 
 This project was deployed on the [Vercel](https://vercel.com/) platform and can be accessed [here](https://pokedex-eriikgabriel.vercel.app).
 
-## 📝 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ---
 
 _Developed by [Erik Gabriel](https://github.com/EriikGabriel) 🚀_
